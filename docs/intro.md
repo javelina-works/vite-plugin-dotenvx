@@ -93,6 +93,26 @@ Dotenvx({
 })
 ```
 
+## Community & Support
+
+- [GitHub Discussions](https://github.com/stacksjs/vite-plugin-dotenvx/discussions) for questions & help
+- [Discord Community](https://discord.gg/stacksjs) for real-time chat
+- [GitHub Issues](https://github.com/stacksjs/vite-plugin-dotenvx/issues) for bugs & feature requests
+
+## Stargazers
+
+[![Stargazers](https://starchart.cc/stacksjs/vite-plugin-dotenvx.svg?variant=adaptive)](https://starchart.cc/stacksjs/vite-plugin-dotenvx)
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](https://github.com/stacksjs/stacks/blob/main/.github/CONTRIBUTING.md) for details.
+
+## Postcardware
+
+Two things are true: Stacks OSS will always stay open-source, and we do love to receive postcards from wherever Stacks is used! _We also publish them on our website._
+
+Our address: Stacks.js, 12665 Village Ln #2306, Playa Vista, CA 90094 🌎
+
 ## Sponsors
 
 We would like to extend our thanks to the following sponsors for funding Stacks development. If you are interested in becoming a sponsor, please reach out to us.
