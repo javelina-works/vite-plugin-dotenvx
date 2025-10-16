@@ -29,12 +29,13 @@ export function VitePluginDotenvx(options: VitePluginDotenvxOptions): Plugin {
     exposeToClient = [],
   } = options
 
-  let originalConsole: typeof console
+  // default to a safe console so debug can be called before configResolved
+  let originalConsole: typeof console = console
   let loadedEnv: Record<string, string> = {}
 
   const debug = (...args: any[]) => {
     if (verbose)
-      originalConsole.log(`[vite-plugin-dotenvx@${version}]`, ...args)
+      (originalConsole ?? console).log(`[vite-plugin-dotenvx@${version}]`, ...args)
   }
 
   /**
@@ -126,11 +127,17 @@ export function VitePluginDotenvx(options: VitePluginDotenvxOptions): Plugin {
         }
       }
       else {
-        debug('Loaded environment variables from:', dotenvxOptions.path.join(', '))
+        debug('Loaded environment variables from:')
+        dotenvxOptions.path.forEach((path: string) => {
+          debug(`  ${path}`)
+        })
 
         if (verbose && result.parsed) {
           const loadedVars = Object.keys(result.parsed).length
-          debug(`Loaded ${loadedVars} environment variables`)
+          debug(`Loaded ${loadedVars} environment variables:`)
+          Object.keys(result.parsed).forEach((key: string) => {
+            debug(`  ${key}: ${result.parsed![key]}`)
+          })
         }
 
         // Store loaded environment variables
@@ -158,9 +165,10 @@ export function VitePluginDotenvx(options: VitePluginDotenvxOptions): Plugin {
       if (!enabled)
         return
 
+      // keep a copy of console for consistent debug behavior
       originalConsole = { ...console }
 
-      // Load environment variables
+      // Load environment variables (this keeps existing behaviour of doing filesystem ops here)
       loadEnvFiles()
 
       // Generate .env.example file if requested
@@ -175,8 +183,21 @@ export function VitePluginDotenvx(options: VitePluginDotenvxOptions): Plugin {
     },
 
     config(config) {
-      if (!enabled || Object.keys(loadedEnv).length === 0)
+      if (!enabled) {
+        debug('Plugin is disabled, skipping config hook')
         return
+      }
+
+      // Ensure envs are loaded before we try to expose them to the client
+      if (Object.keys(loadedEnv).length === 0) {
+        debug('No environment variables loaded, loading from files')
+        loadEnvFiles()
+      }
+
+      if (Object.keys(loadedEnv).length === 0) {
+        debug('No environment variables loaded, skipping config hook')
+        return
+      }
 
       // Expose specific environment variables to the client
       if (exposeToClient.length > 0) {
