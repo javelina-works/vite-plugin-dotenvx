@@ -12,3 +12,6 @@ temp
 docs/.vitepress/cache
 .env*.local
 .env.keys
+
+# Only for 'dist-build' branch to access our build output
+!/dist/
